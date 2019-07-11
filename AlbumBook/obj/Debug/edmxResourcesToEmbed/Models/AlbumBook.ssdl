@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AlbumBookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="albums">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" />
+    <Property Name="title" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="photos">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="albumId" Type="int" Nullable="false" />
+    <Property Name="title" Type="nvarchar" MaxLength="100" />
+    <Property Name="url" Type="nvarchar" MaxLength="100" />
+    <Property Name="thumbnailUrl" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="posts">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" Nullable="false" />
+    <Property Name="title" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="body" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="username" Type="nvarchar" MaxLength="50" />
+    <Property Name="email" Type="nvarchar" MaxLength="50" />
+    <Property Name="address" Type="nvarchar" MaxLength="100" />
+    <Property Name="phone" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <Association Name="FK_albums_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="albums" Type="Self.albums" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="albums">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_albums">
+    <End Role="albums" Type="Self.albums" Multiplicity="1" />
+    <End Role="photos" Type="Self.photos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="albums">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos">
+        <PropertyRef Name="albumId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posts_users">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="posts" Type="Self.posts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="posts">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AlbumBookModelStoreContainer">
+    <EntitySet Name="albums" EntityType="Self.albums" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="photos" EntityType="Self.photos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="posts" EntityType="Self.posts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_albums_users" Association="Self.FK_albums_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="albums" EntitySet="albums" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_albums" Association="Self.FK_photos_albums">
+      <End Role="albums" EntitySet="albums" />
+      <End Role="photos" EntitySet="photos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posts_users" Association="Self.FK_posts_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="posts" EntitySet="posts" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

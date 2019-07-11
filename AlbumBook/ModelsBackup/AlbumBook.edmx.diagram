@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="38bba3557d3b40619b9efef96619fda8" Name="Diagram1">
+        <EntityTypeShape EntityType="AlbumBookModel.album" Width="1.5" PointX="5.125" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlbumBookModel.photo" Width="1.5" PointX="7.625" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlbumBookModel.post" Width="1.5" PointX="4.625" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlbumBookModel.sysdiagram" Width="1.5" PointX="8.875" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlbumBookModel.user" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <AssociationConnector Association="AlbumBookModel.FK_albums_users" ManuallyRouted="false" />
+        <AssociationConnector Association="AlbumBookModel.FK_photos_albums" ManuallyRouted="false" />
+        <AssociationConnector Association="AlbumBookModel.FK_posts_users" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

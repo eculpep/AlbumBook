@@ -1,0 +1,241 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<AlbumBook.Models.album>
+
+@{
+    ViewBag.Title = "Index";
+}
+<script type="text/javascript">
+    function displayId(e) {
+        var id = $(e).attr('id');
+        alert(id);
+    }
+    function detailDisplayToggle(e) {
+        var id = $(e).attr('id');
+        $('#' + id + "Posts").toggle();
+        $('[id^=' + id + 'Toggle]').toggle();
+
+    }
+    function albumDisplayToggle(e) {
+        var id = $(e).attr("id");
+        id += "Photo";
+        $('[id^=' + id + ']').toggle();
+        $('[id^=' + 'title' + id + ']').toggle();
+        $('#' + id + '0').show();
+        $('#' + 'title' + id + '0').show();
+    }
+    function postDisplayToggle(e) {
+        var id = $(e).attr("id");
+        $('[id^=' + id + 'Body]').toggle();
+        $('[id^=' + id + 'Title]').toggle();
+    }
+</script>
+<div class="container-fluid">
+    @{
+        int id = -1;
+        int userId = -1;
+        int rc = 0;
+        string tnHideOrDisplay = "none";
+        string userIdent = "userId";
+        string userIdentToggle;
+        string userIdentPosts;
+        string userIdentPostsBody;
+        string userIdentPostsTitle;
+        string titleFilterId = "TitleFilterId";
+        string albumPhotoId;
+        string albumTitleId;
+    }
+    <p></p>
+    @foreach (var album in Model)
+    {
+        userIdent = "userIdent" + userId.ToString();
+        userIdentToggle = userIdent + "Toggle";
+        userIdentPosts = userIdent + "Posts";
+        userIdentPostsBody = userIdent + "PostsBody";
+        userIdentPostsTitle = userIdent + "PostsTitle";
+        albumTitleId = "Album" + album.id.ToString();
+        if (id != album.id)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    @if (album.user.id != userId)
+                    {
+                        <div class="row">
+                            <div class="col-sm-8" id="@(userIdent)" onclick="detailDisplayToggle(this)"
+                                 style="border-style:solid; border-width:3px;">
+                                @Html.DisplayFor(modelItem => album.user.name)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @Html.DisplayFor(modelItem => album.user.email)
+                            </div>
+                            <div id="@(userIdentToggle + "WebSite")" style="display:none">
+                                <div class="col-sm-1">
+                                    WebSite:
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DisplayFor(modelItem => album.user.website)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(modelItem => album.user.phone)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @Html.DisplayFor(modelItem => album.user.address.suite)
+                            </div>
+                            <div id="@(userIdentToggle + "CompanyName")" style="display:none">
+                                <div class="col-sm-1">
+                                    Company:
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DisplayFor(modelItem => album.user.company.name)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @Html.DisplayFor(modelItem => album.user.address.street)
+                            </div>
+                            <div id="@(userIdentToggle + "CompanyCatchPhrase")" style="display:none">
+                                <div class="col-sm-1">
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DisplayFor(modelItem => album.user.company.catchPhrase)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @Html.DisplayFor(modelItem => album.user.address.city)
+                                @Html.DisplayFor(modelItem => album.user.address.zipcode)
+                            </div>
+                            <div id="@(userIdentToggle + "CompanyBs")" style="display:none">
+                                <div class="col-sm-1">
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DisplayFor(modelItem => album.user.company.bs)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                LAT: @Html.DisplayFor(modelItem => album.user.address.geo.lat)
+                                LNG: @Html.DisplayFor(modelItem => album.user.address.geo.lng)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2" onclick="postDisplayToggle(this)"
+                                 id="@(userIdentPosts)"
+                                 style="border-style:solid; border-width:3px;display:none">
+                                POSTS
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                @foreach (var upost in album.user.posts)
+                                {
+                                    <div id="@(userIdentPostsTitle)"
+                                         style="display:none">
+                                        @Html.DisplayFor(modelItem => upost.title)
+                                    </div>
+                                    <div id="@(userIdentPostsBody)"
+                                         style="display:none">
+                                        @Html.DisplayFor(modelItem => upost.body)
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-4" onclick="albumDisplayToggle(this)" id="@(albumTitleId)"
+                     style="border-style:solid; border-width:3px;">
+                    ALBUM: @Html.DisplayFor(modelItem => album.title)
+                </div>
+            </div>
+            rc = 0;
+            foreach (var photo in album.photos)
+            {
+                albumPhotoId = "Album" + album.id.ToString() + "Photo" + rc.ToString();
+                if ((rc == 0) || (rc % 4) == 0)
+                {
+                    if (rc > 0)
+                    {
+                        @:</div>
+                }
+                @:<div class="row">
+                }
+                if (rc == 0)
+                {
+                    tnHideOrDisplay = "block";
+                }
+                else
+                {
+                    tnHideOrDisplay = "none";
+                }
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-2" style="display:@tnHideOrDisplay" id="@(albumPhotoId)">
+                            <img src="@Url.Content(photo.thumbnailUrl)" style="width:30px;height:30px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8" style="display:@tnHideOrDisplay" id="@("title" + albumPhotoId)">
+                            @photo.title
+                        </div>
+                    </div>
+                </div>
+                rc++;
+            }
+            if ((album.photos.Count % 4) != 0)
+            {
+               @:</div>
+            }
+    }
+    id = album.id;
+    userId = album.user.id;
+}
+    <div class="container" style="margin-left: 20px; position:fixed;bottom:0; height:220px;">
+        <div>
+            @using (Html.BeginForm("Index", "albums", FormMethod.Get))
+            {
+                @*<p></p>
+            <div class="row"></div>*@
+                <div class="row" style="margin-left:580px">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            Title:
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBox("TitleFilter",(string)ViewBag.TitleFilter)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                            User:
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBox("UserFilter",(string)ViewBag.UserFilter)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="submit" , value="Filter" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="pagination" style="margin-left: 600px">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page}))
+        </div>
+    </div>

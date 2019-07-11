@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AlbumBookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="album">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" />
+    <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="user" Relationship="Self.FK_albums_users" FromRole="albums" ToRole="users" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_photos_albums" FromRole="albums" ToRole="photos" />
+  </EntityType>
+  <EntityType Name="photo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="albumId" Type="Int32" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="url" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="thumbnailUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="album" Relationship="Self.FK_photos_albums" FromRole="photos" ToRole="albums" />
+  </EntityType>
+  <EntityType Name="post">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="user" Relationship="Self.FK_posts_users" FromRole="posts" ToRole="users" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="albums" Relationship="Self.FK_albums_users" FromRole="users" ToRole="albums" />
+    <NavigationProperty Name="posts" Relationship="Self.FK_posts_users" FromRole="users" ToRole="posts" />
+  </EntityType>
+  <Association Name="FK_albums_users">
+    <End Role="users" Type="Self.user" Multiplicity="0..1" />
+    <End Role="albums" Type="Self.album" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="albums">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_albums">
+    <End Role="albums" Type="Self.album" Multiplicity="1" />
+    <End Role="photos" Type="Self.photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="albums">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos">
+        <PropertyRef Name="albumId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posts_users">
+    <End Role="users" Type="Self.user" Multiplicity="1" />
+    <End Role="posts" Type="Self.post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="posts">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AlbumBookEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="albums" EntityType="Self.album" />
+    <EntitySet Name="photos" EntityType="Self.photo" />
+    <EntitySet Name="posts" EntityType="Self.post" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="users" EntityType="Self.user" />
+    <AssociationSet Name="FK_albums_users" Association="Self.FK_albums_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="albums" EntitySet="albums" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_albums" Association="Self.FK_photos_albums">
+      <End Role="albums" EntitySet="albums" />
+      <End Role="photos" EntitySet="photos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posts_users" Association="Self.FK_posts_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="posts" EntitySet="posts" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
